@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 
 export const OperationContext = createContext();
 
@@ -7,75 +7,70 @@ export function OperationContextProvider(props) {
 	const simbolosAUsar = ["+", "-", "/", "*", "="];
 	const [displayNumber, setdisplayNumber] = useState("0");
 	const [currentSymbol, setcurrentSymbol] = useState("");
+	const [displayList, setdisplayList] = useState([]);
+
+	useEffect(() => {
+		setdisplayList(displayNumber.split(""));
+	}, [displayNumber]);
 
 	//Encuentra los datos antes del simbolo y después el símbolo
-	function encontrarValores(listaDisplay) {
-		const indexOfSymbol = listaDisplay.indexOf(currentSymbol);
-		const firstpart = listaDisplay.splice("", indexOfSymbol);
-		const secondpart = listaDisplay.filter((e) => {
+	function encontrarValores() {
+		const indexOfSymbol = displayList.indexOf(currentSymbol);
+		const firstpart = displayList.splice("", indexOfSymbol);
+		// Filtar falla cuando es la suma del mismo numero 2+2
+		const secondpart = displayList.filter((e,index) => {
 			return !firstpart.includes(e) && e != currentSymbol;
 		});
-		if(firstpart.length==0){
-			return [0, JSON.parse(secondpart.join(""))];
-		}
-		else if (secondpart.length==0){
-			return [JSON.parse(firstpart.join("")),9];
-		}
 		return [JSON.parse(firstpart.join("")), JSON.parse(secondpart.join(""))];
 	}
 
 	function actualizarDisplay(valorNuevo) {
 		const ultimoValor = displayNumber[displayNumber.length - 1];
-		const listaDisplay = displayNumber.split("");
-		console.log("display number " + displayNumber);
 		console.log("ultimo valor " + ultimoValor);
-		// Darle una funcionalidad totalmente distinta a =
-		setdisplayNumber(() => {
-			// Cuando preciona una operación y ya hay una en display
-			// o preciona el simbolo igual
-			if (valorNuevo == "=") {
-				if (displayNumber == "0") {
-					return displayNumber;
-				}
-				const valores = encontrarValores(listaDisplay);
-				if (currentSymbol == "+") {
-					return sumar(valores[0], valores[1]);
-				} 
-				// else if (currentSymbol == "-") {
-				// 	return restar(valores[0], valores[1]);
-				// } else if (currentSymbol == "/") {
-				// 	return dividir(valores[0], valores[1]);
-				// } else if (currentSymbol == "*") {
-				// 	return multiplicar(valores[0], valores[1]);
-				// }
-			}
+		console.log("display number " + displayNumber);
+		console.log("display list ", displayList);
 
-			// Caso el valor es 0 y preciona alguna operación
-			if (simbolosAUsar.includes(valorNuevo) && displayNumber == "0") {
-				return "0";
+		// Cuando preciona una operación y ya hay una en display
+		// o preciona el simbolo igual
+		if (valorNuevo == "=") {
+			if (displayNumber == "0") {
+				setdisplayNumber(() => displayNumber);
+				return;
 			}
+			const valores = encontrarValores();
+			if (currentSymbol == "+") {
+				setdisplayNumber(() => sumar(valores[0], valores[1]));
+				return;
+			}
+		}
 
-			// Caso preciona un número y luego una operación
-			if (
-				!simbolosAUsar.includes(ultimoValor) ||
-				!simbolosAUsar.includes(valorNuevo)
-			) {
-				if (displayNumber == "0") {
-					return valorNuevo;
-				}
-				if (simbolosAUsar.includes(valorNuevo)) {
-					setcurrentSymbol(valorNuevo);
-					return displayNumber + valorNuevo;
-				}
-				return displayNumber + valorNuevo;
-			} else {
-				return displayNumber;
+		// Caso el valor es 0 y preciona alguna operación
+		if (simbolosAUsar.includes(valorNuevo) && displayNumber == "0") {
+			setdisplayNumber(() => "0");
+			return;
+		}
+
+		// Caso preciona un número y luego una operación
+		if (
+			!simbolosAUsar.includes(ultimoValor) ||
+			!simbolosAUsar.includes(valorNuevo)
+		) {
+			if (displayNumber == "0") {
+				setdisplayNumber(() => valorNuevo);
+				return;
 			}
-		});
+			if (simbolosAUsar.includes(valorNuevo)) {
+				setcurrentSymbol(valorNuevo);
+				setdisplayNumber(() => displayNumber + valorNuevo);
+				return;
+			}
+			setdisplayNumber(() => displayNumber + valorNuevo);
+			return;
+		}
 	}
 
 	function sumar(valor1, valor2) {
-		return valor1 + valor2;
+		return JSON.stringify(valor1 + valor2);
 	}
 
 	function restar(valor1, valor2) {
