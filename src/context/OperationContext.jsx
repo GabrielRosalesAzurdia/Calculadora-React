@@ -18,8 +18,9 @@ export function OperationContextProvider(props) {
 		const indexOfSymbol = displayList.indexOf(currentSymbol);
 		const firstpart = displayList.splice("", indexOfSymbol);
 		// Filtar falla cuando es la suma del mismo numero 2+2
+		// falla con !firstpart.includes(e)
 		const secondpart = displayList.filter((e,index) => {
-			return !firstpart.includes(e) && e != currentSymbol;
+			return e != currentSymbol;
 		});
 		return [JSON.parse(firstpart.join("")), JSON.parse(secondpart.join(""))];
 	}
