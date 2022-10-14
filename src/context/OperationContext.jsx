@@ -19,7 +19,7 @@ export function OperationContextProvider(props) {
 		const firstpart = displayList.splice("", indexOfSymbol);
 		// Filtar falla cuando es la suma del mismo numero 2+2
 		// falla con !firstpart.includes(e)
-		const secondpart = displayList.filter((e,index) => {
+		const secondpart = displayList.filter((e) => {
 			return e != currentSymbol;
 		});
 		return [JSON.parse(firstpart.join("")), JSON.parse(secondpart.join(""))];
@@ -41,6 +41,10 @@ export function OperationContextProvider(props) {
 			const valores = encontrarValores();
 			if (currentSymbol == "+") {
 				setdisplayNumber(() => sumar(valores[0], valores[1]));
+				return;
+			}
+			if (currentSymbol == "-") {
+				setdisplayNumber(() => restar(valores[0], valores[1]));
 				return;
 			}
 		}
@@ -75,7 +79,7 @@ export function OperationContextProvider(props) {
 	}
 
 	function restar(valor1, valor2) {
-		console.log("restando");
+		return JSON.stringify(valor1 - valor2);
 	}
 
 	function dividir(valor1, valor2) {
