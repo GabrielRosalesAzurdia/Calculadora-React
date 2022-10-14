@@ -71,7 +71,7 @@ export function OperationContextProvider(props) {
 				setdisplayList(() => displayList);
 				return;
 			}
-			// Si ya hay una operación entonces hace la operación y la coloca 
+			// Si ya hay una operación entonces hace la operación y la coloca
 			// en la memoria
 			const resultado = [igual()];
 			setdisplayList(() => resultado);
@@ -100,9 +100,24 @@ export function OperationContextProvider(props) {
 			// el ingresado es un valor entonces define el simbolo
 			// de la operación y mete el símbolo a la memoria
 			if (simbolosAUsar.includes(valorNuevo)) {
-				setcurrentSymbol(valorNuevo);
-				setdisplayList(() => [...displayList, valorNuevo]);
-				return;
+				// Si el simbolo no ha sido etablecido solo lo agrega
+				// a la operacion : 123+
+				if (currentSymbol == "") {
+					setcurrentSymbol(valorNuevo);
+					setdisplayList(() => [...displayList, valorNuevo]);
+					return;
+				} 
+				// Si el simbolo ya estoa entonces busca el resultado para
+				// la operacion anterior primero y coloca el resultado
+				// y el nuevo simbolo : 123+212 | 335 nuevosimbolo
+				// para quitar esta funcion quitar el else y el if, dejar el 
+				// codigo del if
+				else {
+					setcurrentSymbol(valorNuevo);
+					const resultado = igual();
+					setdisplayList(() => [resultado, valorNuevo]);
+					return;
+				}
 			}
 			// Si es un número nuevo lo mete a la memoria
 			setdisplayList(() => [...displayList, valorNuevo]);
