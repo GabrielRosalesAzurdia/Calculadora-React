@@ -33,20 +33,23 @@ export function OperationContextProvider(props) {
 		return valor1 - valor2;
 	}
 
+	// recibe dos números y devuelve su multiplicación
+	function multiplicar(valor1, valor2) {
+		return valor1*valor2;
+	}
+
 	// recibe dos números y devuelve su división
 	function dividir(valor1, valor2) {
 		console.log("dividiendo");
-	}
-
-	// recibe dos números y devuelve su multiplicación
-	function multiplicar(valor1, valor2) {
-		console.log("multiplicando");
 	}
 
 	// función encargada de dar el resultado de una operación
 	function igual() {
 		// Encuentra los valores antes y después del simbolo de la operacion
 		const valores = encontrarValores();
+		// Linea agregada para funcionalidad de dar rseultado antes de poner
+		// otro simbolo, para quitar funcionalidad también quitar esta linea
+		setcurrentSymbol(()=>"")
 		// Si es suma llama a suma y suma los números
 		if (currentSymbol == "+") {
 			return sumar(valores[0], valores[1]);
@@ -54,6 +57,10 @@ export function OperationContextProvider(props) {
 		// Si es resta llama a resta y resta los númreos
 		if (currentSymbol == "-") {
 			return restar(valores[0], valores[1]);
+		}
+		// Si es multiplicación llama a moltiplicar y resta los multiplica
+		if (currentSymbol == "*") {
+			return multiplicar(valores[0], valores[1]);
 		}
 	}
 
@@ -102,6 +109,7 @@ export function OperationContextProvider(props) {
 			if (simbolosAUsar.includes(valorNuevo)) {
 				// Si el simbolo no ha sido etablecido solo lo agrega
 				// a la operacion : 123+
+				console.log(currentSymbol)
 				if (currentSymbol == "") {
 					setcurrentSymbol(valorNuevo);
 					setdisplayList(() => [...displayList, valorNuevo]);
@@ -113,9 +121,10 @@ export function OperationContextProvider(props) {
 				// para quitar esta funcion quitar el else y el if, dejar el 
 				// codigo del if
 				else {
-					setcurrentSymbol(valorNuevo);
-					const resultado = igual();
+					const resultado = igual() ;
+					console.log(resultado)
 					setdisplayList(() => [resultado, valorNuevo]);
+					setcurrentSymbol(()=>valorNuevo);
 					return;
 				}
 			}
