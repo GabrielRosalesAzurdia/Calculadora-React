@@ -35,12 +35,18 @@ export function OperationContextProvider(props) {
 
 	// recibe dos números y devuelve su multiplicación
 	function multiplicar(valor1, valor2) {
-		return valor1*valor2;
+		return valor1 * valor2;
 	}
 
 	// recibe dos números y devuelve su división
 	function dividir(valor1, valor2) {
-		console.log("dividiendo");
+		const operacion = valor1 / valor2;
+		if (operacion != Infinity) {
+			return operacion;
+		} else {
+			alert("No se puede dividir por 0");
+			return 0;
+		}
 	}
 
 	// función encargada de dar el resultado de una operación
@@ -49,7 +55,7 @@ export function OperationContextProvider(props) {
 		const valores = encontrarValores();
 		// Linea agregada para funcionalidad de dar rseultado antes de poner
 		// otro simbolo, para quitar funcionalidad también quitar esta linea
-		setcurrentSymbol(()=>"")
+		setcurrentSymbol(() => "");
 		// Si es suma llama a suma y suma los números
 		if (currentSymbol == "+") {
 			return sumar(valores[0], valores[1]);
@@ -58,9 +64,13 @@ export function OperationContextProvider(props) {
 		if (currentSymbol == "-") {
 			return restar(valores[0], valores[1]);
 		}
-		// Si es multiplicación llama a moltiplicar y resta los multiplica
+		// Si es multiplicación llama a moltiplicar y multiplica los números
 		if (currentSymbol == "*") {
 			return multiplicar(valores[0], valores[1]);
+		}
+		// Si es división llama a dividir y divide los números
+		if (currentSymbol == "/") {
+			return dividir(valores[0], valores[1]);
 		}
 	}
 
@@ -109,22 +119,22 @@ export function OperationContextProvider(props) {
 			if (simbolosAUsar.includes(valorNuevo)) {
 				// Si el simbolo no ha sido etablecido solo lo agrega
 				// a la operacion : 123+
-				console.log(currentSymbol)
+				console.log(currentSymbol);
 				if (currentSymbol == "") {
 					setcurrentSymbol(valorNuevo);
 					setdisplayList(() => [...displayList, valorNuevo]);
 					return;
-				} 
+				}
 				// Si el simbolo ya estoa entonces busca el resultado para
 				// la operacion anterior primero y coloca el resultado
 				// y el nuevo simbolo : 123+212 | 335 nuevosimbolo
-				// para quitar esta funcion quitar el else y el if, dejar el 
+				// para quitar esta funcion quitar el else y el if, dejar el
 				// codigo del if
 				else {
-					const resultado = igual() ;
-					console.log(resultado)
+					const resultado = igual();
+					console.log(resultado);
 					setdisplayList(() => [resultado, valorNuevo]);
-					setcurrentSymbol(()=>valorNuevo);
+					setcurrentSymbol(() => valorNuevo);
 					return;
 				}
 			}
