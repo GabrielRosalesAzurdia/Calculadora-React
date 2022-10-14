@@ -2,16 +2,14 @@ import { createContext, useState, useEffect } from "react";
 
 export const OperationContext = createContext();
 
-export function OperationContextProvider(props) {
-	const numerosAUsar = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-	const simbolosAUsar = ["+", "-", "/", "*", "="];
-	const [displayNumber, setdisplayNumber] = useState("0");
-	const [currentSymbol, setcurrentSymbol] = useState("");
-	const [displayList, setdisplayList] = useState([]);
+// IDEA: cambiar el displaynumber de string a un array que siemper maneje datos
+// de esa manera para facilitar el manejo de weas
 
-	useEffect(() => {
-		setdisplayList(displayNumber.split(""));
-	}, [displayNumber]);
+export function OperationContextProvider(props) {
+	const numerosAUsar = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+	const simbolosAUsar = ["+", "-", "/", "*", "="];
+	const [currentSymbol, setcurrentSymbol] = useState("");
+	const [displayList, setdisplayList] = useState([0]);
 
 	//Encuentra los datos antes del simbolo y después el símbolo
 	function encontrarValores() {
@@ -22,36 +20,35 @@ export function OperationContextProvider(props) {
 		const secondpart = displayList.filter((e) => {
 			return e != currentSymbol;
 		});
-		return [JSON.parse(firstpart.join("")), JSON.parse(secondpart.join(""))];
+		return [firstpart[0], secondpart[0]];
 	}
 
 	function actualizarDisplay(valorNuevo) {
-		const ultimoValor = displayNumber[displayNumber.length - 1];
-		console.log("ultimo valor " + ultimoValor);
-		console.log("display number " + displayNumber);
+		const ultimoValor = displayList[displayList.length - 1];
+		const checkIfDefault = (displayList[0] == 0 && displayList.length == 1);
 		console.log("display list ", displayList);
 
 		// Cuando preciona una operación y ya hay una en display
 		// o preciona el simbolo igual
 		if (valorNuevo == "=") {
-			if (displayNumber == "0") {
-				setdisplayNumber(() => displayNumber);
+			if (checkIfDefault) {
+				setdisplayList(() => displayList);
 				return;
 			}
 			const valores = encontrarValores();
 			if (currentSymbol == "+") {
-				setdisplayNumber(() => sumar(valores[0], valores[1]));
+				setdisplayList(() => [sumar(valores[0], valores[1])]);
 				return;
 			}
 			if (currentSymbol == "-") {
-				setdisplayNumber(() => restar(valores[0], valores[1]));
+				setdisplayList(() => [restar(valores[0], valores[1])]);
 				return;
 			}
 		}
 
 		// Caso el valor es 0 y preciona alguna operación
-		if (simbolosAUsar.includes(valorNuevo) && displayNumber == "0") {
-			setdisplayNumber(() => "0");
+		if (simbolosAUsar.includes(valorNuevo) && checkIfDefault) {
+			setdisplayList(() => [0]);
 			return;
 		}
 
@@ -60,26 +57,26 @@ export function OperationContextProvider(props) {
 			!simbolosAUsar.includes(ultimoValor) ||
 			!simbolosAUsar.includes(valorNuevo)
 		) {
-			if (displayNumber == "0") {
-				setdisplayNumber(() => valorNuevo);
+			if (checkIfDefault) {
+				setdisplayList(() => [valorNuevo]);
 				return;
 			}
 			if (simbolosAUsar.includes(valorNuevo)) {
 				setcurrentSymbol(valorNuevo);
-				setdisplayNumber(() => displayNumber + valorNuevo);
+				setdisplayList(()=>[...displayList, valorNuevo])
 				return;
 			}
-			setdisplayNumber(() => displayNumber + valorNuevo);
+			setdisplayList(()=>[...displayList, valorNuevo])
 			return;
 		}
 	}
 
 	function sumar(valor1, valor2) {
-		return JSON.stringify(valor1 + valor2);
+		return valor1 + valor2;
 	}
 
 	function restar(valor1, valor2) {
-		return JSON.stringify(valor1 - valor2);
+		return valor1 - valor2;
 	}
 
 	function dividir(valor1, valor2) {
@@ -96,7 +93,7 @@ export function OperationContextProvider(props) {
 
 	return (
 		<OperationContext.Provider
-			value={{ displayNumber, actualizarDisplay, numerosAUsar, simbolosAUsar }}
+			value={{ displayList, actualizarDisplay, numerosAUsar, simbolosAUsar }}
 		>
 			{props.children}
 		</OperationContext.Provider>
