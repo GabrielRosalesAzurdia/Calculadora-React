@@ -20,7 +20,7 @@ export function OperationContextProvider(props) {
 		const secondpart = displayList.filter((e) => {
 			return e != currentSymbol;
 		});
-		return [firstpart[0], secondpart[0]];
+		return [JSON.parse(firstpart.join("")), JSON.parse(secondpart.join(""))];
 	}
 
 	// recibe dos números y devuelve su suma
