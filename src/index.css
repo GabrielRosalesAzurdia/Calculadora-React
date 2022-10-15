@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@font-face {
+	font-family: "NovaRound-Regular";
+	src: local("NovaRound-Regular"),
+		url("./assets/fonts/NovaRound-Regular.ttf") format("truetype");
+	font-weight: bold;
+}
