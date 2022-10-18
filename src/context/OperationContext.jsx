@@ -4,7 +4,7 @@ export const OperationContext = createContext();
 
 export function OperationContextProvider(props) {
 	// Lista de numeros a utilizar en los botones
-	const numerosAUsar = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+	const numerosAUsar = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 	// Lista de simbolos a utilizar en los botones
 	const simbolosAUsar = ["+", "-", "/", "*", "="];
 	// Operación a realizar ahora

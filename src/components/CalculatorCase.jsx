@@ -16,7 +16,12 @@ function CalculatorCase() {
 			<div className="mt-10 bg-slate-800 p-2 rounded-md">
 				<div className="grid grid-cols-3 gap-2 m-3 text-xl">
 					{numerosAUsar.map((numeroAUsar, index) => {
-						return <CalculatorNumberKey key={index} valorTecla={numeroAUsar} />;
+						return numeroAUsar!=0 ? <CalculatorNumberKey key={index} valorTecla={numeroAUsar} /> : <span key={index} />;
+					})}
+				</div>
+				<div className="text-center text-xl m-3">
+					{numerosAUsar.map((numeroAUsar, index) => {
+						return numeroAUsar!=0 ? <span key={index}/> : <CalculatorNumberKey key={index} valorTecla={numeroAUsar} /> ;
 					})}
 				</div>
 				<div className="grid grid-cols-3 gap-2 m-3 text-xl">
