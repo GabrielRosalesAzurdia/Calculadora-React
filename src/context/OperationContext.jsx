@@ -7,6 +7,8 @@ export function OperationContextProvider(props) {
 	const numerosAUsar = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 	// Lista de simbolos a utilizar en los botones
 	const simbolosAUsar = ["+", "-", "/", "*", "="];
+	// Lista de acciones que la calculadora puede hacer
+	const acciones = ["RESET", "DELETE"];
 	// Operación a realizar ahora
 	const [currentSymbol, setcurrentSymbol] = useState("");
 	// Elementos en la memoria de la calculadora
@@ -81,6 +83,26 @@ export function OperationContextProvider(props) {
 		// Revisar si la calculadora está en sus valores de inicio
 		const checkIfDefault = displayList[0] == 0 && displayList.length == 1;
 
+		// Cuando se preciona la ccion RESET
+		if (valorNuevo == "RESET") {
+			setdisplayList(() => [0]);
+			return;
+		}
+		// Cuando preciona la accion DELETE
+		if (valorNuevo == "DELETE") {
+			// Revisar estado del array para ver si es necesario regresar a 0
+			if (displayList.length == 1) {
+				setdisplayList(() => [0]);
+			} 
+			// Borrar último elemento 
+			else {
+				displayList.pop();
+				setdisplayList(() => [...displayList]);
+				console.log(displayList)
+			}
+			return;
+		}
+
 		// Cuando preciona el simbolo igual se ejecuta
 		if (valorNuevo == "=") {
 			// Si está en sus valores por efecto no cambia y devuelve 0
@@ -146,7 +168,13 @@ export function OperationContextProvider(props) {
 
 	return (
 		<OperationContext.Provider
-			value={{ displayList, actualizarDisplay, numerosAUsar, simbolosAUsar }}
+			value={{
+				displayList,
+				actualizarDisplay,
+				numerosAUsar,
+				simbolosAUsar,
+				acciones,
+			}}
 		>
 			{props.children}
 		</OperationContext.Provider>
