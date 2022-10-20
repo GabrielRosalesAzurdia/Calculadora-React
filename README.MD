@@ -20,14 +20,10 @@ Instalar node.js y en la consola dentro del directorio correr
 
 ## TO DO:
 
-- Mejorar código de contexto.
+- Mejorar Ya no dar el igual en contexto, abstraer o mover la función igual
 - Implementar operaciones con paréntesis.
 - Implementar raiz Cuadrada.
 - Implementar elevacion al cuadrado.
 - Implementar módulo de la división.
 - Implementar Easter Egg ;)
 - Implementar Diseño Responsivo
-
-Quitar if para la parte de operaciones:
-    Crear un objeto símbolo que tenga un método para que solo se tenga que llamar
-    objeto mapper con un callback, se le pasan los dos valores

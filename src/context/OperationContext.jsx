@@ -1,15 +1,17 @@
 import { createContext, useState } from "react";
-import { simbolosAUsar } from "./operations";
+import { dividir, multiplicar, restar, sumar } from "./operations";
 
 export const OperationContext = createContext();
 
 export function OperationContextProvider(props) {
 	// Lista de numeros a utilizar en los botones
 	const numerosAUsar = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, "."];
+	// Lista de simbolos a utilizar
+	const simbolosAUsar = ["+", "-", "*", "/", "="];
 	// Lista de acciones que la calculadora puede hacer
 	const acciones = ["RESET", "DELETE"];
 	// Operación a realizar ahora
-	const [currentSymbol, setcurrentSymbol] = useState(simbolosAUsar[0]);
+	const [currentSymbol, setcurrentSymbol] = useState("");
 	// Elementos en la memoria de la calculadora
 	const [displayList, setdisplayList] = useState([0]);
 
@@ -17,7 +19,7 @@ export function OperationContextProvider(props) {
 	// con un 0 como único dato
 	function estadoInicial() {
 		setdisplayList(() => [0]);
-		setcurrentSymbol(() => simbolosAUsar[0]);
+		setcurrentSymbol(() => "");
 	}
 
 	// Encuentra los datos antes del simbolo y después el símbolo de la operación
@@ -37,13 +39,16 @@ export function OperationContextProvider(props) {
 		const valores = encontrarValores();
 		// Linea agregada para funcionalidad de dar resultado antes de poner
 		// otro simbolo, para quitar funcionalidad también quitar esta linea
-		setcurrentSymbol(() => simbolosAUsar[0]);
+		setcurrentSymbol(() => "");
 		// Devuelve el resultado de la operación necesaria
-		return currentSymbol.operationName(valores[0], valores[1]);
+		const operationsSelect = {
+			"+": sumar,
+			"-": restar,
+			"*": multiplicar,
+			"/": dividir,
+		};
+		return operationsSelect[currentSymbol](valores[0], valores[1]);
 	};
-
-	// Agregar igual callback a su elemento de operación
-	simbolosAUsar[simbolosAUsar.length - 1].operationName = igual;
 
 	// Actualiza los números en la memoria de la calcualdora
 	function actualizarDisplay(valorNuevo) {
@@ -53,11 +58,9 @@ export function OperationContextProvider(props) {
 		const checkIfDefault = displayList[0] == 0 && displayList.length == 1;
 		// Último valor es un simbolo
 		// Otro método : ultimoValor.operational ? true : false;
-		const ultimoValorIsSymbol =
-			simbolosAUsar.indexOf(ultimoValor) >= 0 ? true : false;
+		const ultimoValorIsSymbol = simbolosAUsar.includes(ultimoValor);
 		// Valor nuevo es un simbolo
-		const valorNuevoIsSymbol =
-			simbolosAUsar.indexOf(valorNuevo) >= 0 ? true : false;
+		const valorNuevoIsSymbol = simbolosAUsar.includes(valorNuevo);
 
 		// Cuando se preciona la acción RESET regresa a su estado normal
 		if (valorNuevo == "RESET") {
@@ -84,7 +87,7 @@ export function OperationContextProvider(props) {
 		}
 
 		// Cuando preciona el simbolo igual se ejecuta para dar el resultado
-		if (valorNuevo.symbol == "=") {
+		if (valorNuevo == "=") {
 			// Si está en sus valores por efecto no cambia y devuelve 0
 			if (checkIfDefault) {
 				return;
@@ -128,7 +131,7 @@ export function OperationContextProvider(props) {
 			if (valorNuevoIsSymbol) {
 				// Si el simbolo no ha sido etablecido solo lo agrega
 				// a la operacion : 123+
-				if (!currentSymbol.operational) {
+				if (currentSymbol == "") {
 					setcurrentSymbol(valorNuevo);
 					setdisplayList(() => [...displayList, valorNuevo]);
 					return;
