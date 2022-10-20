@@ -1,20 +1,11 @@
 import { createContext, useState } from "react";
-import { Operation, dividir, multiplicar, restar, sumar } from "./operations";
+import { simbolosAUsar } from "./operations";
 
 export const OperationContext = createContext();
 
 export function OperationContextProvider(props) {
 	// Lista de numeros a utilizar en los botones
 	const numerosAUsar = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, "."];
-	// Lista de objetos con simbolos y callback a las funcioens individuales
-	// se usará para los botones y para el funcionamiento
-	const simbolosAUsar = [
-		new Operation("", false),
-		new Operation("+", true, sumar),
-		new Operation("-", true, restar),
-		new Operation("*", true, multiplicar),
-		new Operation("/", true, dividir),
-	];
 	// Lista de acciones que la calculadora puede hacer
 	const acciones = ["RESET", "DELETE"];
 	// Operación a realizar ahora
@@ -26,6 +17,7 @@ export function OperationContextProvider(props) {
 	// con un 0 como único dato
 	function estadoInicial() {
 		setdisplayList(() => [0]);
+		setcurrentSymbol(() => simbolosAUsar[0]);
 	}
 
 	// Encuentra los datos antes del simbolo y después el símbolo de la operación
@@ -50,8 +42,8 @@ export function OperationContextProvider(props) {
 		return currentSymbol.operationName(valores[0], valores[1]);
 	};
 
-	//Agregando la operación del simbolo igual
-	simbolosAUsar.push(new Operation("=", true, igual));
+	// Agregar igual callback a su elemento de operación
+	simbolosAUsar[simbolosAUsar.length - 1].operationName = igual;
 
 	// Actualiza los números en la memoria de la calcualdora
 	function actualizarDisplay(valorNuevo) {
@@ -60,7 +52,9 @@ export function OperationContextProvider(props) {
 		// Revisar si la calculadora está en sus valores de inicio
 		const checkIfDefault = displayList[0] == 0 && displayList.length == 1;
 		// Último valor es un simbolo
-		const ultimoValorIsSymbol = ultimoValor.operational ? true : false;
+		// Otro método : ultimoValor.operational ? true : false;
+		const ultimoValorIsSymbol =
+			simbolosAUsar.indexOf(ultimoValor) >= 0 ? true : false;
 		// Valor nuevo es un simbolo
 		const valorNuevoIsSymbol =
 			simbolosAUsar.indexOf(valorNuevo) >= 0 ? true : false;
@@ -86,7 +80,6 @@ export function OperationContextProvider(props) {
 			// Borrar último elemento de la pantalla
 			displayList.pop();
 			setdisplayList(() => [...displayList]);
-			console.log(displayList);
 			return;
 		}
 
@@ -105,8 +98,9 @@ export function OperationContextProvider(props) {
 
 		// En caso coloque un punto decimal revisar que tenga un valor valido
 		// por delante
-		if (valorNuevo == "." && (ultimoValor == 0 || ultimoValorIsSymbol)) {
-			if (ultimoValor == 0) {
+		// No verificar que el último valor sea 0 sino que revisar si es el único
+		if (valorNuevo == "." && (checkIfDefault || ultimoValorIsSymbol)) {
+			if (checkIfDefault) {
 				setdisplayList(() => [0, valorNuevo]);
 				return;
 			}
@@ -146,7 +140,6 @@ export function OperationContextProvider(props) {
 				// codigo del if
 				else {
 					const resultado = igual();
-					console.log(resultado);
 					setdisplayList(() => [resultado, valorNuevo]);
 					setcurrentSymbol(() => valorNuevo);
 					return;
