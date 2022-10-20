@@ -1,20 +1,35 @@
-// Recibe dos números y devuelve su suma
-export function sumar(valor1, valor2) {
-	return valor1 + valor2;
+// Clase para asociar un simbolo con una oepración
+export class Operation {
+	constructor(symbol, operational, operationName) {
+		this.symbol = symbol;
+		this.operational = operational
+		this.operationName = operationName 
+	}
+	callOperation(valor1, valor2) {
+		this.operationName(valor1, valor2);
+	}
+	toString(){
+		return this.symbol
+	}
 }
+
+// Recibe dos números y devuelve su suma
+export const sumar = (valor1, valor2) => {
+	return valor1 + valor2;
+};
 
 // Recibe dos números y devuelve su resta
-export function restar(valor1, valor2) {
+export const restar = (valor1, valor2) => {
 	return valor1 - valor2;
-}
+};
 
 // Recibe dos números y devuelve su multiplicación
-export function multiplicar(valor1, valor2) {
+export const multiplicar = (valor1, valor2) => {
 	return valor1 * valor2;
-}
+};
 
 // Recibe dos números y devuelve su división
-export function dividir(valor1, valor2) {
+export const dividir = (valor1, valor2) => {
 	const operacion = valor1 / valor2;
 	if (operacion != Infinity) {
 		return operacion;
@@ -22,4 +37,4 @@ export function dividir(valor1, valor2) {
 		alert("No se puede dividir por 0");
 		return 0;
 	}
-}
+};

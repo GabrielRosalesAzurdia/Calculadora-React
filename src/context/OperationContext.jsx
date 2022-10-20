@@ -1,17 +1,24 @@
 import { createContext, useState } from "react";
-import { dividir, multiplicar, restar, sumar } from "./operations";
+import { Operation, dividir, multiplicar, restar, sumar } from "./operations";
 
 export const OperationContext = createContext();
 
 export function OperationContextProvider(props) {
 	// Lista de numeros a utilizar en los botones
 	const numerosAUsar = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, "."];
-	// Lista de simbolos a utilizar en los botones
-	const simbolosAUsar = ["+", "-", "/", "*", "="];
+	// Lista de objetos con simbolos y callback a las funcioens individuales
+	// se usará para los botones y para el funcionamiento
+	const simbolosAUsar = [
+		new Operation("", false),
+		new Operation("+", true, sumar),
+		new Operation("-", true, restar),
+		new Operation("*", true, multiplicar),
+		new Operation("/", true, dividir),
+	];
 	// Lista de acciones que la calculadora puede hacer
 	const acciones = ["RESET", "DELETE"];
 	// Operación a realizar ahora
-	const [currentSymbol, setcurrentSymbol] = useState("");
+	const [currentSymbol, setcurrentSymbol] = useState(simbolosAUsar[0]);
 	// Elementos en la memoria de la calculadora
 	const [displayList, setdisplayList] = useState([0]);
 
@@ -33,29 +40,18 @@ export function OperationContextProvider(props) {
 	}
 
 	// Función encargada de dar el resultado de una operación
-	function igual() {
+	const igual = () => {
 		// Encuentra los valores antes y después del simbolo de la operacion
 		const valores = encontrarValores();
-		// Linea agregada para funcionalidad de dar rseultado antes de poner
+		// Linea agregada para funcionalidad de dar resultado antes de poner
 		// otro simbolo, para quitar funcionalidad también quitar esta linea
-		setcurrentSymbol(() => "");
-		// Si es suma llama a suma y suma los números
-		if (currentSymbol == "+") {
-			return sumar(valores[0], valores[1]);
-		}
-		// Si es resta llama a resta y resta los númreos
-		if (currentSymbol == "-") {
-			return restar(valores[0], valores[1]);
-		}
-		// Si es multiplicación llama a moltiplicar y multiplica los números
-		if (currentSymbol == "*") {
-			return multiplicar(valores[0], valores[1]);
-		}
-		// Si es división llama a dividir y divide los números
-		if (currentSymbol == "/") {
-			return dividir(valores[0], valores[1]);
-		}
-	}
+		setcurrentSymbol(() => simbolosAUsar[0]);
+		// Devuelve el resultado de la operación necesaria
+		return currentSymbol.operationName(valores[0], valores[1]);
+	};
+
+	//Agregando la operación del simbolo igual
+	simbolosAUsar.push(new Operation("=", true, igual));
 
 	// Actualiza los números en la memoria de la calcualdora
 	function actualizarDisplay(valorNuevo) {
@@ -64,9 +60,10 @@ export function OperationContextProvider(props) {
 		// Revisar si la calculadora está en sus valores de inicio
 		const checkIfDefault = displayList[0] == 0 && displayList.length == 1;
 		// Último valor es un simbolo
-		const ultimoValorIsSymbol = simbolosAUsar.includes(ultimoValor);
+		const ultimoValorIsSymbol = ultimoValor.operational ? true : false;
 		// Valor nuevo es un simbolo
-		const valorNuevoIsSymbol = simbolosAUsar.includes(valorNuevo);
+		const valorNuevoIsSymbol =
+			simbolosAUsar.indexOf(valorNuevo) >= 0 ? true : false;
 
 		// Cuando se preciona la acción RESET regresa a su estado normal
 		if (valorNuevo == "RESET") {
@@ -94,7 +91,7 @@ export function OperationContextProvider(props) {
 		}
 
 		// Cuando preciona el simbolo igual se ejecuta para dar el resultado
-		if (valorNuevo == "=") {
+		if (valorNuevo.symbol == "=") {
 			// Si está en sus valores por efecto no cambia y devuelve 0
 			if (checkIfDefault) {
 				return;
@@ -137,8 +134,7 @@ export function OperationContextProvider(props) {
 			if (valorNuevoIsSymbol) {
 				// Si el simbolo no ha sido etablecido solo lo agrega
 				// a la operacion : 123+
-				console.log(currentSymbol);
-				if (currentSymbol == "") {
+				if (!currentSymbol.operational) {
 					setcurrentSymbol(valorNuevo);
 					setdisplayList(() => [...displayList, valorNuevo]);
 					return;

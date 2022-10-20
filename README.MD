@@ -27,3 +27,7 @@ Instalar node.js y en la consola dentro del directorio correr
 - Implementar módulo de la división.
 - Implementar Easter Egg ;)
 - Implementar Diseño Responsivo
+
+Quitar if para la parte de operaciones:
+    Crear un objeto símbolo que tenga un método para que solo se tenga que llamar
+    objeto mapper con un callback, se le pasan los dos valores
