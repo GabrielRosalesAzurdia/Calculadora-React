@@ -25,3 +25,5 @@ Instalar node.js y en la consola dentro del directorio correr
 - Implementar raiz Cuadrada.
 - Implementar elevacion al cuadrado.
 - Implementar módulo de la división.
+- Implementar Easter Egg ;)
+- Implementar Diseño Responsivo

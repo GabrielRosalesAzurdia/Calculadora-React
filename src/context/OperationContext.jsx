@@ -4,7 +4,7 @@ export const OperationContext = createContext();
 
 export function OperationContextProvider(props) {
 	// Lista de numeros a utilizar en los botones
-	const numerosAUsar = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+	const numerosAUsar = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0,"."];
 	// Lista de simbolos a utilizar en los botones
 	const simbolosAUsar = ["+", "-", "/", "*", "="];
 	// Lista de acciones que la calculadora puede hacer
@@ -14,7 +14,13 @@ export function OperationContextProvider(props) {
 	// Elementos en la memoria de la calculadora
 	const [displayList, setdisplayList] = useState([0]);
 
-	//Encuentra los datos antes del simbolo y después el símbolo de la operación
+	// Fución que coloca a la lista de pantalla de la manera que comenzó
+	// con un 0 como único dato
+	function estadoInicial() {
+		setdisplayList(() => [0]);
+	}
+
+	// Encuentra los datos antes del simbolo y después el símbolo de la operación
 	// Devuelve la primera y segunda parte dentro de una array
 	function encontrarValores() {
 		const indexOfSymbol = displayList.indexOf(currentSymbol);
@@ -25,22 +31,22 @@ export function OperationContextProvider(props) {
 		return [JSON.parse(firstpart.join("")), JSON.parse(secondpart.join(""))];
 	}
 
-	// recibe dos números y devuelve su suma
+	// Recibe dos números y devuelve su suma
 	function sumar(valor1, valor2) {
 		return valor1 + valor2;
 	}
 
-	// recibe dos números y devuelve su resta
+	// Recibe dos números y devuelve su resta
 	function restar(valor1, valor2) {
 		return valor1 - valor2;
 	}
 
-	// recibe dos números y devuelve su multiplicación
+	// Recibe dos números y devuelve su multiplicación
 	function multiplicar(valor1, valor2) {
 		return valor1 * valor2;
 	}
 
-	// recibe dos números y devuelve su división
+	// Recibe dos números y devuelve su división
 	function dividir(valor1, valor2) {
 		const operacion = valor1 / valor2;
 		if (operacion != Infinity) {
@@ -51,7 +57,7 @@ export function OperationContextProvider(props) {
 		}
 	}
 
-	// función encargada de dar el resultado de una operación
+	// Función encargada de dar el resultado de una operación
 	function igual() {
 		// Encuentra los valores antes y después del simbolo de la operacion
 		const valores = encontrarValores();
@@ -78,36 +84,40 @@ export function OperationContextProvider(props) {
 
 	// Actualiza los números en la memoria de la calcualdora
 	function actualizarDisplay(valorNuevo) {
-		// Ultimo valor en la memoria de la calculadora
+		// Último valor en la memoria de la calculadora
 		const ultimoValor = displayList[displayList.length - 1];
 		// Revisar si la calculadora está en sus valores de inicio
 		const checkIfDefault = displayList[0] == 0 && displayList.length == 1;
 
-		// Cuando se preciona la ccion RESET
+		// Cuando se preciona la acción RESET regresa a su estado normal
 		if (valorNuevo == "RESET") {
-			setdisplayList(() => [0]);
-			return;
-		}
-		// Cuando preciona la accion DELETE
-		if (valorNuevo == "DELETE") {
-			// Revisar estado del array para ver si es necesario regresar a 0
-			if (displayList.length == 1) {
-				setdisplayList(() => [0]);
-			} 
-			// Borrar último elemento 
-			else {
-				displayList.pop();
-				setdisplayList(() => [...displayList]);
-				console.log(displayList)
-			}
+			estadoInicial();
 			return;
 		}
 
-		// Cuando preciona el simbolo igual se ejecuta
+		// Cuando preciona la accion DELETE para borrar solo un elemento
+		if (valorNuevo == "DELETE") {
+			// Revisar estado del array para ver si es necesario regresar a 0
+			// AL MOMENTO DE REALIZAR UNA OPERACIÓN Y OBTENER UN RESULTADO
+			// SE QUEDA GUARDADO EN UNA SOLA POSICIÓN DEL ARRAY ENTONCES
+			// TOMA COMO SI SOLO QUEDARA UN NÚMERO Y TODO LO REEMPLAZA POR 0
+			// IMPLICA CAMBIAR EL COMO SE GUARDAN RESULTADOS
+			// IDEA: JSON.STRINGIFY(numerocompelto) -> array.push(JSON.PARSE(x[posei]))
+			if (displayList.length == 1) {
+				estadoInicial();
+				return;
+			}
+			// Borrar último elemento de la pantalla
+			displayList.pop();
+			setdisplayList(() => [...displayList]);
+			console.log(displayList);
+			return;
+		}
+
+		// Cuando preciona el simbolo igual se ejecuta para dar el resultado
 		if (valorNuevo == "=") {
 			// Si está en sus valores por efecto no cambia y devuelve 0
 			if (checkIfDefault) {
-				setdisplayList(() => displayList);
 				return;
 			}
 			// Si ya hay una operación entonces hace la operación y la coloca
@@ -118,9 +128,8 @@ export function OperationContextProvider(props) {
 		}
 
 		// Cuando preciona un simbolo pero el valor de la memoria es 0
-		// Coloca en 0 la memoria
+		// no altera los datos
 		if (simbolosAUsar.includes(valorNuevo) && checkIfDefault) {
-			setdisplayList(() => [0]);
 			return;
 		}
 
