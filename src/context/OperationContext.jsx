@@ -1,10 +1,11 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
+import { dividir, multiplicar, restar, sumar } from "./operations";
 
 export const OperationContext = createContext();
 
 export function OperationContextProvider(props) {
 	// Lista de numeros a utilizar en los botones
-	const numerosAUsar = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0,"."];
+	const numerosAUsar = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, "."];
 	// Lista de simbolos a utilizar en los botones
 	const simbolosAUsar = ["+", "-", "/", "*", "="];
 	// Lista de acciones que la calculadora puede hacer
@@ -29,32 +30,6 @@ export function OperationContextProvider(props) {
 			return e != currentSymbol;
 		});
 		return [JSON.parse(firstpart.join("")), JSON.parse(secondpart.join(""))];
-	}
-
-	// Recibe dos números y devuelve su suma
-	function sumar(valor1, valor2) {
-		return valor1 + valor2;
-	}
-
-	// Recibe dos números y devuelve su resta
-	function restar(valor1, valor2) {
-		return valor1 - valor2;
-	}
-
-	// Recibe dos números y devuelve su multiplicación
-	function multiplicar(valor1, valor2) {
-		return valor1 * valor2;
-	}
-
-	// Recibe dos números y devuelve su división
-	function dividir(valor1, valor2) {
-		const operacion = valor1 / valor2;
-		if (operacion != Infinity) {
-			return operacion;
-		} else {
-			alert("No se puede dividir por 0");
-			return 0;
-		}
 	}
 
 	// Función encargada de dar el resultado de una operación
@@ -88,6 +63,10 @@ export function OperationContextProvider(props) {
 		const ultimoValor = displayList[displayList.length - 1];
 		// Revisar si la calculadora está en sus valores de inicio
 		const checkIfDefault = displayList[0] == 0 && displayList.length == 1;
+		// Último valor es un simbolo
+		const ultimoValorIsSymbol = simbolosAUsar.includes(ultimoValor);
+		// Valor nuevo es un simbolo
+		const valorNuevoIsSymbol = simbolosAUsar.includes(valorNuevo);
 
 		// Cuando se preciona la acción RESET regresa a su estado normal
 		if (valorNuevo == "RESET") {
@@ -127,17 +106,25 @@ export function OperationContextProvider(props) {
 			return;
 		}
 
+		// En caso coloque un punto decimal revisar que tenga un valor valido
+		// por delante
+		if (valorNuevo == "." && (ultimoValor == 0 || ultimoValorIsSymbol)) {
+			if (ultimoValor == 0) {
+				setdisplayList(() => [0, valorNuevo]);
+				return;
+			}
+			setdisplayList(() => [...displayList, 0, valorNuevo]);
+			return;
+		}
+
 		// Cuando preciona un simbolo pero el valor de la memoria es 0
 		// no altera los datos
-		if (simbolosAUsar.includes(valorNuevo) && checkIfDefault) {
+		if (valorNuevoIsSymbol && checkIfDefault) {
 			return;
 		}
 
 		// Revisa si el valor ingresado y el último en la memoria son simbolos
-		if (
-			!simbolosAUsar.includes(ultimoValor) ||
-			!simbolosAUsar.includes(valorNuevo)
-		) {
+		if (!ultimoValorIsSymbol || !valorNuevoIsSymbol) {
 			// Si tiene sus valores por defecto entonces el valor de la
 			// memoria será el nuevo número
 			if (checkIfDefault) {
@@ -147,7 +134,7 @@ export function OperationContextProvider(props) {
 			// Si el último valor de la memoria es un número y
 			// el ingresado es un valor entonces define el simbolo
 			// de la operación y mete el símbolo a la memoria
-			if (simbolosAUsar.includes(valorNuevo)) {
+			if (valorNuevoIsSymbol) {
 				// Si el simbolo no ha sido etablecido solo lo agrega
 				// a la operacion : 123+
 				console.log(currentSymbol);
