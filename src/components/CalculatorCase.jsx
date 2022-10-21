@@ -11,7 +11,7 @@ function CalculatorCase() {
 		useContext(OperationContext);
 	return (
 		<section
-			className="mb-96 mr-96 ml-96 pt-40"
+			className="mb-96 mr-96 ml-96 pt-20"
 			style={{ fontFamily: "NovaRound-Regular" }}
 		>
 			<p className="text-white mb-2">
@@ -42,10 +42,21 @@ function CalculatorCase() {
 						);
 					})}
 				</div>
-				<div className="grid grid-cols-3 gap-2 m-3 text-2xl">
-					{simbolosAUsar.map((simboloAusar, index) => {
-						return (
-							<CalculatorSymbolKey key={index} valorTecla={simboloAusar} />
+				<div className="grid grid-cols-3 gap-2 m-3 text-xl">
+					{simbolosAUsar.map((simboloAUsar, index) => {
+						return simboloAUsar != "=" ? (
+							<CalculatorSymbolKey key={index} valorTecla={simboloAUsar} />
+						) : (
+							<span key={index} />
+						);
+					})}
+				</div>
+				<div className="text-center text-xl m-3">
+					{simbolosAUsar.map((simboloAUsar, index) => {
+						return simboloAUsar != "=" ? (
+							<span key={index} />
+						) : (
+							<CalculatorSymbolKey key={index} valorTecla={simboloAUsar} />
 						);
 					})}
 				</div>

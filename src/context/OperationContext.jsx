@@ -1,5 +1,12 @@
 import { createContext, useState } from "react";
-import { dividir, multiplicar, restar, sumar } from "./operations";
+import {
+	dividir,
+	multiplicar,
+	restar,
+	sumar,
+	elevadoCuadrado,
+	raizCuadrada,
+} from "./operations";
 
 export const OperationContext = createContext();
 
@@ -7,7 +14,7 @@ export function OperationContextProvider(props) {
 	// Lista de numeros a utilizar en los botones
 	const numerosAUsar = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, "."];
 	// Lista de simbolos a utilizar
-	const simbolosAUsar = ["+", "-", "*", "/", "="];
+	const simbolosAUsar = ["+", "-", "*", "/", "^2", "√", "="];
 	// Lista de acciones que la calculadora puede hacer
 	const acciones = ["RESET", "DELETE"];
 	// Operación a realizar ahora
@@ -30,7 +37,10 @@ export function OperationContextProvider(props) {
 		const secondpart = displayList.filter((e) => {
 			return e != currentSymbol;
 		});
-		return [JSON.parse(firstpart.join("")), JSON.parse(secondpart.join(""))];
+		return [
+			JSON.parse(firstpart.join("")),
+			JSON.parse(secondpart.join("") ? secondpart.join("") : "0"),
+		];
 	}
 
 	// Función encargada de dar el resultado de una operación
@@ -46,6 +56,8 @@ export function OperationContextProvider(props) {
 			"-": restar,
 			"*": multiplicar,
 			"/": dividir,
+			"^2": elevadoCuadrado,
+			"√": raizCuadrada,
 		};
 		return operationsSelect[currentSymbol](valores[0], valores[1]);
 	};

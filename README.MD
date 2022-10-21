@@ -20,7 +20,6 @@ Instalar node.js y en la consola dentro del directorio correr
 
 ## TO DO:
 
-- Mejorar Ya no dar el igual en contexto, abstraer o mover la función igual
 - Implementar operaciones con paréntesis.
 - Implementar raiz Cuadrada.
 - Implementar elevacion al cuadrado.

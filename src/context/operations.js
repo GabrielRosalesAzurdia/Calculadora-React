@@ -23,3 +23,11 @@ export const dividir = (valor1, valor2) => {
 		return 0;
 	}
 };
+
+export const elevadoCuadrado = (valor1) => {
+	return valor1 * valor1;
+};
+
+export const raizCuadrada = (valor1) => {
+	return Math.sqrt(valor1);
+};
