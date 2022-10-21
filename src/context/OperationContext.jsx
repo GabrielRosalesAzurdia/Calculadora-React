@@ -31,22 +31,22 @@ export function OperationContextProvider(props) {
 
 	// Encuentra los datos antes del simbolo y después el símbolo de la operación
 	// Devuelve la primera y segunda parte dentro de una array
-	function encontrarValores() {
+	function encontrarValores(currentSymbol,displayList) {
 		const indexOfSymbol = displayList.indexOf(currentSymbol);
 		const firstpart = displayList.splice("", indexOfSymbol);
 		const secondpart = displayList.filter((e) => {
 			return e != currentSymbol;
 		});
 		return [
-			JSON.parse(firstpart.join("")),
+			JSON.parse(firstpart.join("") ? firstpart.join("") : "0"),
 			JSON.parse(secondpart.join("") ? secondpart.join("") : "0"),
 		];
 	}
 
 	// Función encargada de dar el resultado de una operación
-	const igual = () => {
+	const igual = (currentSymbol,displayList) => {
 		// Encuentra los valores antes y después del simbolo de la operacion
-		const valores = encontrarValores();
+		const valores = encontrarValores(currentSymbol,displayList);
 		// Linea agregada para funcionalidad de dar resultado antes de poner
 		// otro simbolo, para quitar funcionalidad también quitar esta linea
 		setcurrentSymbol(() => "");
@@ -106,11 +106,24 @@ export function OperationContextProvider(props) {
 			}
 			// Si ya hay una operación entonces hace la operación y la coloca
 			// en la memoria
-			const resultado = [igual()];
+			const resultado = [igual(currentSymbol,displayList)];
 			setdisplayList(() => resultado);
 			return;
 		}
 
+		// Cuando se usa una de las dos operaciones especiales
+		// Raiz o elevado, estos dan un resultado inmediato
+		if (currentSymbol == "" && (valorNuevo == "^2" || valorNuevo == "√")){
+			const resultado = [igual(valorNuevo == "^2" ? "^2" : "√",displayList)];
+			setdisplayList(() => resultado);
+			return;
+		}else if (valorNuevo == "^2" || valorNuevo == "√"){
+			const preResultado = [igual(currentSymbol,displayList)];
+			const resultado = [igual(valorNuevo == "^2" ? "^2" : "√",preResultado)];
+			setdisplayList(() => resultado);
+			return;
+		}
+		
 		// En caso coloque un punto decimal revisar que tenga un valor valido
 		// por delante
 		// No verificar que el último valor sea 0 sino que revisar si es el único
@@ -153,12 +166,10 @@ export function OperationContextProvider(props) {
 				// y el nuevo simbolo : 123+212 | 335 nuevosimbolo
 				// para quitar esta funcion quitar el else y el if, dejar el
 				// codigo del if
-				else {
-					const resultado = igual();
-					setdisplayList(() => [resultado, valorNuevo]);
-					setcurrentSymbol(() => valorNuevo);
-					return;
-				}
+				const resultado = igual(currentSymbol,displayList);
+				setdisplayList(() => [resultado, valorNuevo]);
+				setcurrentSymbol(() => valorNuevo);
+				return;
 			}
 			// Si es un número nuevo lo mete a la memoria
 			setdisplayList(() => [...displayList, valorNuevo]);
