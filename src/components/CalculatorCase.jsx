@@ -11,12 +11,10 @@ function CalculatorCase() {
 		useContext(OperationContext);
 	return (
 		<section
-			className="mb-96 mr-96 ml-96 pt-20"
+			className="md:mb-96 md:mr-96 md:ml-96 md:pt-20"
 			style={{ fontFamily: "NovaRound-Regular" }}
 		>
-			<p className="text-white mb-2">
-				GR - 2022
-			</p>
+			<p className="text-white mb-2">GR - 2022</p>
 			<CalculatorDisplay />
 			<div className="mt-10 bg-slate-800 p-2 rounded-md">
 				<div className="grid grid-cols-2 gap-2 m-3 text-xl">
