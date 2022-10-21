@@ -31,7 +31,7 @@ export function OperationContextProvider(props) {
 
 	// Encuentra los datos antes del simbolo y después el símbolo de la operación
 	// Devuelve la primera y segunda parte dentro de una array
-	function encontrarValores(currentSymbol,displayList) {
+	function encontrarValores(currentSymbol, displayList) {
 		const indexOfSymbol = displayList.indexOf(currentSymbol);
 		const firstpart = displayList.splice("", indexOfSymbol);
 		const secondpart = displayList.filter((e) => {
@@ -44,9 +44,9 @@ export function OperationContextProvider(props) {
 	}
 
 	// Función encargada de dar el resultado de una operación
-	const igual = (currentSymbol,displayList) => {
+	const igual = (currentSymbol, displayList) => {
 		// Encuentra los valores antes y después del simbolo de la operacion
-		const valores = encontrarValores(currentSymbol,displayList);
+		const valores = encontrarValores(currentSymbol, displayList);
 		// Linea agregada para funcionalidad de dar resultado antes de poner
 		// otro simbolo, para quitar funcionalidad también quitar esta linea
 		setcurrentSymbol(() => "");
@@ -73,6 +73,12 @@ export function OperationContextProvider(props) {
 		const ultimoValorIsSymbol = simbolosAUsar.includes(ultimoValor);
 		// Valor nuevo es un simbolo
 		const valorNuevoIsSymbol = simbolosAUsar.includes(valorNuevo);
+
+		// Cuando preciona un simbolo pero el valor de la memoria es 0
+		// no altera los datos
+		if (valorNuevoIsSymbol && checkIfDefault) {
+			return;
+		}
 
 		// Cuando se preciona la acción RESET regresa a su estado normal
 		if (valorNuevo == "RESET") {
@@ -106,24 +112,22 @@ export function OperationContextProvider(props) {
 			}
 			// Si ya hay una operación entonces hace la operación y la coloca
 			// en la memoria
-			const resultado = [igual(currentSymbol,displayList)];
+			const resultado = [igual(currentSymbol, displayList)];
 			setdisplayList(() => resultado);
 			return;
 		}
 
 		// Cuando se usa una de las dos operaciones especiales
 		// Raiz o elevado, estos dan un resultado inmediato
-		if (currentSymbol == "" && (valorNuevo == "^2" || valorNuevo == "√")){
-			const resultado = [igual(valorNuevo == "^2" ? "^2" : "√",displayList)];
-			setdisplayList(() => resultado);
-			return;
-		}else if (valorNuevo == "^2" || valorNuevo == "√"){
-			const preResultado = [igual(currentSymbol,displayList)];
-			const resultado = [igual(valorNuevo == "^2" ? "^2" : "√",preResultado)];
+		if (valorNuevo == "^2" || valorNuevo == "√") {
+			const resultado =
+				currentSymbol == ""
+					? [igual(valorNuevo, displayList)]
+					: [igual(valorNuevo, [igual(currentSymbol, displayList)])];
 			setdisplayList(() => resultado);
 			return;
 		}
-		
+
 		// En caso coloque un punto decimal revisar que tenga un valor valido
 		// por delante
 		// No verificar que el último valor sea 0 sino que revisar si es el único
@@ -136,13 +140,7 @@ export function OperationContextProvider(props) {
 			return;
 		}
 
-		// Cuando preciona un simbolo pero el valor de la memoria es 0
-		// no altera los datos
-		if (valorNuevoIsSymbol && checkIfDefault) {
-			return;
-		}
-
-		// Revisa si el valor ingresado y el último en la memoria son simbolos
+		// Revisa si el valor ingresado y el último en la memoria son simbolos y niega el resutlado
 		if (!ultimoValorIsSymbol || !valorNuevoIsSymbol) {
 			// Si tiene sus valores por defecto entonces el valor de la
 			// memoria será el nuevo número
@@ -151,7 +149,7 @@ export function OperationContextProvider(props) {
 				return;
 			}
 			// Si el último valor de la memoria es un número y
-			// el ingresado es un valor entonces define el simbolo
+			// el ingresado es un simbolo entonces define el simbolo
 			// de la operación y mete el símbolo a la memoria
 			if (valorNuevoIsSymbol) {
 				// Si el simbolo no ha sido etablecido solo lo agrega
@@ -166,7 +164,7 @@ export function OperationContextProvider(props) {
 				// y el nuevo simbolo : 123+212 | 335 nuevosimbolo
 				// para quitar esta funcion quitar el else y el if, dejar el
 				// codigo del if
-				const resultado = igual(currentSymbol,displayList);
+				const resultado = igual(currentSymbol, displayList);
 				setdisplayList(() => [resultado, valorNuevo]);
 				setcurrentSymbol(() => valorNuevo);
 				return;
