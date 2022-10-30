@@ -11,7 +11,7 @@ function CalculatorCase() {
 		useContext(OperationContext);
 	return (
 		<section
-			className="md:mb-96 md:mr-96 md:ml-96 md:pt-20"
+			className="artboard artboard-horizontal phone-1 md:mb-96 md:mr-96 md:ml-96 md:pt-20"
 			style={{ fontFamily: "NovaRound-Regular" }}
 		>
 			<p className="text-white mb-2">GR - 2022</p>

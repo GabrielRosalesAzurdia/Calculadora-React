@@ -21,7 +21,4 @@ Instalar node.js y en la consola dentro del directorio correr
 
 ## TO DO:
 
-- Implementar operaciones con paréntesis.
-- Implementar módulo de la división.
-- Implementar Diseño Responsivo
-- Implementar Easter Egg ;)
+- Notificación con el pez y con división por 0

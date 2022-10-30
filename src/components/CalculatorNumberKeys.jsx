@@ -8,7 +8,7 @@ function CalculatorNumberKeys({ valorTecla }) {
 	if (valorTecla == 0) {
 		return (
 			<button
-				className="h-fit w-full  px-6 py-2 font-semibold text-white border-b-4 rounded bg-red-500 border-red-800 hover:border-red-800 hover:bg-red-700"
+				className="h-fit w-full  px-6 py-2 font-semibold text-white rounded btn bg-red-500"
 				onClick={() => actualizarDisplay(valorTecla)}
 			>
 				{valorTecla}
@@ -17,7 +17,7 @@ function CalculatorNumberKeys({ valorTecla }) {
 	} else {
 		return (
 			<button
-				className="px-6 py-2 font-semibold text-white border-b-4 rounded bg-slate-500 border-slate-800 hover:border-slate-800 hover:bg-slate-700"
+				className="px-6 py-2 font-semibold text-white rounded btn bg-slate-500"
 				onClick={() => actualizarDisplay(valorTecla)}
 			>
 				{valorTecla}

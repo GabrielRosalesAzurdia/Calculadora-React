@@ -6,7 +6,7 @@ function CalculatorSymbolKey({ valorTecla }) {
 	if (valorTecla == "=") {
 		return (
 			<button
-			className="h-fit w-full  px-6 py-2 font-semibold text-white border-b-4 rounded bg-red-500 border-red-800 hover:border-red-800 hover:bg-red-700"
+			className="h-fit w-full  px-6 py-2 font-semibold text-white rounded btn bg-red-500"
 				onClick={() => actualizarDisplay(valorTecla)}
 			>
 				{valorTecla}
@@ -15,7 +15,7 @@ function CalculatorSymbolKey({ valorTecla }) {
 	}else{
 		return (
 			<button
-				className="px-6 py-2 font-semibold text-white border-b-4 rounded bg-cyan-500 border-cyan-800 hover:border-cyan-800 hover:bg-cyan-700"
+				className="px-6 py-2 font-semibold text-white rounded btn bg-cyan-500"
 				onClick={() => actualizarDisplay(valorTecla)}
 			>
 				{valorTecla}

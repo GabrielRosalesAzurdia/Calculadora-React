@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import {pezEasterEgg} from "./pez"
 import {
 	dividir,
 	multiplicar,
@@ -45,6 +46,11 @@ export function OperationContextProvider(props) {
 
 	// Función encargada de dar el resultado de una operación
 	const igual = (currentSymbol, displayList) => {
+		// ? Revisa por el Estar egg
+		const easterEggCode = [2,"+",2]
+		if(JSON.stringify(displayList) == JSON.stringify(easterEggCode)){
+			return pezEasterEgg();
+		}
 		// Encuentra los valores antes y después del simbolo de la operacion
 		const valores = encontrarValores(currentSymbol, displayList);
 		// Linea agregada para funcionalidad de dar resultado antes de poner
