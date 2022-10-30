@@ -1,3 +1,5 @@
+import { toast } from "react-hot-toast";
+
 // Recibe dos números y devuelve su suma
 export const sumar = (valor1, valor2) => {
 	return valor1 + valor2;
@@ -19,7 +21,7 @@ export const dividir = (valor1, valor2) => {
 	if (operacion != Infinity) {
 		return operacion;
 	} else {
-		alert("No se puede dividir por 0");
+		toast.error("No se puede dividir por 0");
 		return 0;
 	}
 };

@@ -1,3 +1,3 @@
-export function pezEasterEgg(fnSetDisplay){
-    return ["<><"]
+export function pezEasterEgg(fnSetDisplay) {
+	return ["<><"];
 }

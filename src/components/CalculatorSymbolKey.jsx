@@ -6,13 +6,13 @@ function CalculatorSymbolKey({ valorTecla }) {
 	if (valorTecla == "=") {
 		return (
 			<button
-			className="h-fit w-full  px-6 py-2 font-semibold text-white rounded btn bg-red-500"
+				className="h-fit w-full  px-6 py-2 font-semibold text-white rounded btn bg-red-500"
 				onClick={() => actualizarDisplay(valorTecla)}
 			>
 				{valorTecla}
 			</button>
 		);
-	}else{
+	} else {
 		return (
 			<button
 				className="px-6 py-2 font-semibold text-white rounded btn bg-cyan-500"

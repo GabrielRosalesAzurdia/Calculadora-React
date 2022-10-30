@@ -18,7 +18,3 @@ GR - 2022
 Instalar node.js y en la consola dentro del directorio correr
 
 > npm run dev
-
-## TO DO:
-
-- Notificación con el pez y con división por 0
