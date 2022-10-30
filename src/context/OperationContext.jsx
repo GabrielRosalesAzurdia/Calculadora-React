@@ -26,10 +26,10 @@ export function OperationContextProvider(props) {
 
 	// Fución que coloca a la lista de pantalla de la manera que comenzó
 	// con un 0 como único dato
-	function estadoInicial() {
+	const estadoInicial = () => {
 		setdisplayList(() => [0]);
 		setcurrentSymbol(() => "");
-	}
+	};
 
 	// Encuentra los datos antes del simbolo y después el símbolo de la operación
 	// Devuelve la primera y segunda parte dentro de una array
@@ -50,8 +50,7 @@ export function OperationContextProvider(props) {
 		// ? Revisa por el Estar egg
 		const easterEggCode = [2, "+", 2];
 		if (JSON.stringify(displayList) == JSON.stringify(easterEggCode)) {
-			toast("Lo mejor será que reinicies : )");
-			return pezEasterEgg();
+			return pezEasterEgg(estadoInicial);
 		}
 		// Encuentra los valores antes y después del simbolo de la operacion
 		const valores = encontrarValores(currentSymbol, displayList);
